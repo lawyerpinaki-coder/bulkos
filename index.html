@@ -1,0 +1,2219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>BulkOS — Hardgainer Meal & Prep OS</title>
+
+  <!-- Apple Safari Standalone Web App Meta Tags -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="BulkOS" />
+  <meta name="theme-color" content="#090d16" />
+
+  <style>
+    :root {
+      --bg: #090d16;
+      --surface: #111827;
+      --surface-2: #182235;
+      --border: #243044;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --emerald: #10b981;
+      --emerald-dark: #059669;
+      --amber: #f59e0b;
+      --sky: #38bdf8;
+      --rose: #f43f5e;
+      --purple: #a855f7;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding-top: calc(68px + var(--safe-top));
+      padding-bottom: calc(82px + var(--safe-bottom));
+      line-height: 1.45;
+    }
+
+    /* Header */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 40;
+      background: rgba(9, 13, 22, 0.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      padding: calc(10px + var(--safe-top)) 16px 10px;
+    }
+
+    .header-inner {
+      max-width: 1040px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-title {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge-profile {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(16, 185, 129, 0.14);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.35);
+    }
+
+    .brand-sub {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Buttons */
+    .btn {
+      border: none;
+      border-radius: 12px;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 9px 13px;
+      transition: transform 0.1s ease, background 0.15s ease, opacity 0.15s ease;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn-emerald {
+      background: linear-gradient(135deg, var(--emerald), var(--emerald-dark));
+      color: #052e16;
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.25);
+    }
+    .btn-amber {
+      background: linear-gradient(135deg, #fbbf24, var(--amber));
+      color: #1f1300;
+    }
+    .btn-slate {
+      background: var(--surface-2);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+    .btn-sm { padding: 6px 10px; font-size: 11px; border-radius: 9px; }
+
+    /* Container & Cards */
+    main {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 16px;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+    }
+
+    /* Sticky Macro Summary */
+    .macro-sticky {
+      position: sticky;
+      top: calc(64px + var(--safe-top));
+      z-index: 30;
+      background: rgba(17, 24, 39, 0.94);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45);
+    }
+
+    .macro-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .macro-box {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 10px 12px;
+    }
+
+    .macro-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 6px;
+    }
+
+    .macro-val {
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .macro-target {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 8px;
+      background: #1e293b;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.3s ease;
+    }
+
+    /* Date & WFH/WFO Controls */
+    .controls-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .date-nav {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .mode-switch {
+      display: inline-flex;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 3px;
+    }
+
+    .mode-btn {
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 12px;
+      padding: 7px 12px;
+      border-radius: 9px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .mode-btn.active-wfh {
+      background: var(--emerald);
+      color: #052e16;
+    }
+
+    .mode-btn.active-wfo {
+      background: var(--amber);
+      color: #1f1300;
+    }
+
+    /* Habit Chips */
+    .habits-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .habit-chip {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 4px;
+      cursor: pointer;
+      color: var(--text);
+      font-family: inherit;
+      transition: all 0.15s ease;
+    }
+
+    .habit-chip.done {
+      border-color: rgba(16, 185, 129, 0.6);
+      background: rgba(16, 185, 129, 0.12);
+    }
+
+    /* Meal Slot Cards */
+    .meal-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .meal-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 14px;
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .meal-card.checked {
+      border-color: rgba(16, 185, 129, 0.55);
+      background: linear-gradient(180deg, rgba(16, 185, 129, 0.08), var(--surface));
+    }
+
+    .meal-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .meal-check-wrap {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      flex: 1;
+      cursor: pointer;
+    }
+
+    .checkbox-box {
+      width: 24px;
+      height: 24px;
+      border-radius: 8px;
+      border: 2px solid #475569;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .meal-card.checked .checkbox-box {
+      background: var(--emerald);
+      border-color: var(--emerald);
+      color: #052e16;
+    }
+
+    .slot-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #34d399;
+    }
+
+    .time-pill {
+      font-size: 11px;
+      color: var(--muted);
+      background: var(--bg);
+      padding: 2px 7px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+    }
+
+    .meal-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-top: 5px;
+    }
+
+    .meal-card.checked .meal-name {
+      color: #cbd5e1;
+      text-decoration: line-through;
+      text-decoration-color: rgba(16, 185, 129, 0.6);
+    }
+
+    .meal-macros {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      margin-top: 6px;
+    }
+
+    .meal-footer {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(36, 48, 68, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    /* Filter Pills */
+    .pills-scroll {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+    .pills-scroll::-webkit-scrollbar { display: none; }
+
+    .filter-pill {
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 999px;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .filter-pill.active {
+      background: var(--emerald);
+      color: #052e16;
+      border-color: var(--emerald);
+    }
+
+    /* Recipes Grid */
+    .recipes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 12px;
+    }
+
+    .recipe-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    /* Inputs */
+    input, select, textarea {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      color: var(--text);
+      padding: 9px 12px;
+      font-family: inherit;
+      font-size: 13px;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--emerald);
+    }
+
+    /* Bottom Navigation */
+    nav.bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 40;
+      background: rgba(9, 13, 22, 0.94);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-top: 1px solid var(--border);
+      padding: 8px 8px calc(8px + var(--safe-bottom));
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 4px;
+    }
+
+    .nav-item {
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 4px;
+      border-radius: 12px;
+      cursor: pointer;
+    }
+
+    .nav-item.active {
+      color: var(--emerald);
+      background: rgba(16, 185, 129, 0.1);
+    }
+
+    /* Modal / Drawer */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 60;
+      background: rgba(0, 0, 0, 0.78);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 12px;
+    }
+
+    @media (min-width: 640px) {
+      .modal-backdrop { align-items: center; }
+    }
+
+    .modal-backdrop.open { display: flex; }
+
+    .modal-sheet {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      width: 100%;
+      max-width: 560px;
+      max-height: 88vh;
+      overflow-y: auto;
+      padding: 18px;
+      padding-bottom: calc(18px + var(--safe-bottom));
+    }
+
+    .option-item {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: border-color 0.15s ease;
+    }
+
+    .option-item:hover, .option-item.selected {
+      border-color: var(--emerald);
+      background: rgba(16, 185, 129, 0.08);
+    }
+
+    /* Shopping List */
+    .shop-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 12px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 8px;
+    }
+
+    .shop-item.checked span.item-name {
+      text-decoration: line-through;
+      color: var(--muted);
+    }
+
+    .price-input {
+      width: 74px;
+      text-align: right;
+      padding: 5px 8px;
+      font-weight: 700;
+      font-size: 12px;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      top: calc(76px + var(--safe-top));
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 80;
+      background: #0f172a;
+      color: #f8fafc;
+      border: 1px solid var(--emerald);
+      padding: 10px 16px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+      white-space: nowrap;
+    }
+    .toast.show { opacity: 1; }
+
+    .hidden { display: none !important; }
+    .text-emerald { color: #34d399; }
+    .text-amber { color: #fbbf24; }
+    .text-sky { color: #38bdf8; }
+    .text-rose { color: #fb7185; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    @media (max-width: 640px) { .grid-2-resp { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+  <!-- TOP HEADER WITH CUSTOM SVG EMBLEM & SAVE HTML BUTTON -->
+  <header>
+    <div class="header-inner">
+      <div class="brand">
+        <!-- Custom BulkOS Vector Emblem (Barbell + Lightning Bolt Squircle) -->
+        <svg width="38" height="38" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="BulkOS Logo">
+          <defs>
+            <linearGradient id="bgGrad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#1e293b"/>
+              <stop offset="100%" stop-color="#090d16"/>
+            </linearGradient>
+            <linearGradient id="boltGrad" x1="16" y1="12" x2="48" y2="52" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#10b981"/>
+              <stop offset="100%" stop-color="#f59e0b"/>
+            </linearGradient>
+          </defs>
+          <rect x="2" y="2" width="60" height="60" rx="16" fill="url(#bgGrad)" stroke="#10b981" stroke-width="2.5"/>
+          <!-- Barbell Plates & Shaft -->
+          <rect x="10" y="25" width="5" height="14" rx="2" fill="#34d399"/>
+          <rect x="16" y="22" width="4" height="20" rx="2" fill="#10b981"/>
+          <rect x="44" y="22" width="4" height="20" rx="2" fill="#f59e0b"/>
+          <rect x="49" y="25" width="5" height="14" rx="2" fill="#fbbf24"/>
+          <line x1="20" y1="32" x2="44" y2="32" stroke="#94a3b8" stroke-width="3.5" stroke-linecap="round"/>
+          <!-- Lightning Bolt -->
+          <path d="M35 13L22 34H32L29 51L42 30H32L35 13Z" fill="url(#boltGrad)" stroke="#090d16" stroke-width="1.5" stroke-linejoin="round"/>
+        </svg>
+        <div>
+          <div class="brand-title">
+            BulkOS
+            <span class="badge-profile">30M • 5'5" • <span id="hdrWeight">47.0</span>kg</span>
+          </div>
+          <div class="brand-sub">Offline Safari PWA • 2,400–2,550 kcal</div>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button class="btn btn-emerald btn-sm" onclick="downloadSelfHTML()" title="Save offline .html file to device">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Save .HTML
+        </button>
+        <button class="btn btn-slate btn-sm" onclick="openBackupModal()" title="Backup & Restore JSON">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- TOAST -->
+  <div id="toast" class="toast">Saved!</div>
+
+  <main>
+    <!-- =================================================================== -->
+    <!-- VIEW 1: DAILY TRACKER                                               -->
+    <!-- =================================================================== -->
+    <section id="view-tracker" class="view-panel" style="display:flex; flex-direction:column; gap:14px;">
+
+      <!-- Date & WFH/WFO Mode Bar -->
+      <div class="card">
+        <div class="controls-row">
+          <div class="date-nav">
+            <button class="btn btn-slate btn-sm" onclick="shiftDate(-1)">◀</button>
+            <div>
+              <div id="dateTitle" style="font-weight:800; font-size:15px;">Today</div>
+              <div id="dateSub" style="font-size:11px; color:var(--muted);">Friday, Nov 27</div>
+            </div>
+            <button class="btn btn-slate btn-sm" onclick="shiftDate(1)">▶</button>
+            <button id="todayBtn" class="btn btn-ghost btn-sm hidden" onclick="jumpToday()">Today</button>
+          </div>
+
+          <div class="mode-switch">
+            <button id="btnWFH" class="mode-btn active-wfh" onclick="setDayMode('WFH')">🏠 WFH (5d)</button>
+            <button id="btnWFO" class="mode-btn" onclick="setDayMode('WFO')">🏢 WFO Office (2d)</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sticky Macro Progress Card -->
+      <div class="card macro-sticky">
+        <div class="card-header" style="margin-bottom:8px;">
+          <span class="section-label">Daily Bulk Targets</span>
+          <span id="stallBadge" class="hidden" style="font-size:11px; font-weight:800; color:#fbbf24; background:rgba(245,158,11,0.15); padding:2px 8px; border-radius:999px; border:1px solid rgba(245,158,11,0.4);">
+            ⚡ +200 kcal Stall-Buster Active
+          </span>
+        </div>
+
+        <div class="macro-grid">
+          <!-- Calories -->
+          <div class="macro-box">
+            <div class="macro-top">
+              <span style="font-size:12px; font-weight:700; color:#cbd5e1;">Calories</span>
+              <div>
+                <span id="calVal" class="macro-val text-emerald">0</span>
+                <span id="calMax" class="macro-target">/ 2,475</span>
+              </div>
+            </div>
+            <div class="progress-track">
+              <div id="calBar" class="progress-fill" style="width:0%; background:linear-gradient(90deg, #10b981, #34d399);"></div>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:10px; color:var(--muted); margin-top:5px;">
+              <span id="calGoalRange">2,400–2,550 kcal</span>
+              <span id="calLeft" class="text-emerald" style="font-weight:700;">2,475 left</span>
+            </div>
+          </div>
+
+          <!-- Protein -->
+          <div class="macro-box">
+            <div class="macro-top">
+              <span style="font-size:12px; font-weight:700; color:#cbd5e1;">Protein</span>
+              <div>
+                <span id="proVal" class="macro-val text-sky">0g</span>
+                <span id="proMax" class="macro-target">/ 120g</span>
+              </div>
+            </div>
+            <div class="progress-track">
+              <div id="proBar" class="progress-fill" style="width:0%; background:linear-gradient(90deg, #0284c7, #38bdf8);"></div>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:10px; color:var(--muted); margin-top:5px;">
+              <span id="proGoalRange">110–130 g</span>
+              <span id="proLeft" class="text-sky" style="font-weight:700;">120g left</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 1-Tap Daily Habits -->
+      <div class="habits-row">
+        <button id="chip-creatine" class="habit-chip" onclick="toggleHabit('creatine')">
+          <span style="font-size:16px;">💊</span>
+          <span style="font-size:12px; font-weight:800;">3g Creatine</span>
+          <span id="lbl-creatine" style="font-size:10px; color:var(--muted);">Post-Workout</span>
+        </button>
+        <button id="chip-workout" class="habit-chip" onclick="toggleHabit('workout')">
+          <span style="font-size:16px;">🏋️</span>
+          <span style="font-size:12px; font-weight:800;">Morning Gym</span>
+          <span id="lbl-workout" style="font-size:10px; color:var(--muted);">Tap to complete</span>
+        </button>
+        <button id="chip-water" class="habit-chip" onclick="bumpWater()">
+          <span style="font-size:16px;">💧</span>
+          <span style="font-size:12px; font-weight:800;"><span id="waterGlasses">0</span>/7 Glasses</span>
+          <span style="font-size:10px; color:var(--sky);"><span id="waterLiters">0.0</span> / 3.5 L (+0.5L)</span>
+        </button>
+      </div>
+
+      <!-- 5 Dedicated Meal Slots -->
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-top:4px;">
+        <span class="section-label" id="slotsHeaderLabel">5 Meal Slots • WFH Plan</span>
+        <div style="display:flex; gap:6px;">
+          <button class="btn btn-slate btn-sm" onclick="openCustomFoodModal()">+ Custom Food</button>
+          <button class="btn btn-ghost btn-sm" onclick="checkAllSlots()">Check All</button>
+        </div>
+      </div>
+
+      <div id="mealSlotsContainer" class="meal-list"></div>
+
+      <!-- Custom Quick Foods Logged Today -->
+      <div id="customLogsCard" class="card hidden">
+        <div class="card-header">
+          <span class="section-label">Extra Quick-Logged Foods Today</span>
+          <button class="btn btn-slate btn-sm" onclick="openCustomFoodModal()">+ Add</button>
+        </div>
+        <div id="customLogsList"></div>
+      </div>
+
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- VIEW 2: 36-RECIPE LIBRARY & BATCH PREP TRACKER                      -->
+    <!-- =================================================================== -->
+    <section id="view-recipes" class="view-panel hidden" style="display:flex; flex-direction:column; gap:14px;">
+
+      <!-- 750g Batch Chicken Marinade Fridge Tracker -->
+      <div class="card" style="border-left: 4px solid var(--amber);">
+        <div class="controls-row">
+          <div style="flex:1;">
+            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+              <span style="font-size:11px; font-weight:800; background:rgba(245,158,11,0.18); color:#fbbf24; padding:2px 8px; border-radius:999px;">TWICE-WEEKLY BATCH</span>
+              <strong style="font-size:15px;">750g Chicken Marinade Fridge Tracker</strong>
+            </div>
+            <p style="font-size:12px; color:var(--muted); margin-top:4px;">
+              5 servings × 150g • Keeps 4 days in fridge • Sear 3 mins/side
+            </p>
+            <div id="batchStatusLine" style="font-size:12px; font-weight:700; color:#34d399; margin-top:6px;">
+              Not prepped yet — tap "Marinate 750g Now" when ready.
+            </div>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            <button class="btn btn-amber btn-sm" onclick="startNewBatch()">🔄 Marinate 750g Now</button>
+            <button class="btn btn-slate btn-sm" onclick="useBatchPortion()">🍗 Use 1 Portion (-150g)</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recipe Search & Meal-Slot Filters -->
+      <div class="card" style="display:flex; flex-direction:column; gap:10px;">
+        <div style="display:flex; gap:8px;">
+          <input type="text" id="recipeSearch" oninput="renderRecipes()" placeholder="Search 36 recipes (chicken, paneer, bhurji, oats, shake, rice)..." />
+          <button class="btn btn-emerald btn-sm" onclick="openAddRecipeModal()" style="white-space:nowrap;">+ New</button>
+        </div>
+
+        <!-- Meal Slot Filter Pills -->
+        <div>
+          <div style="font-size:10px; font-weight:700; color:var(--muted); margin-bottom:5px;">FILTER BY MEAL SLOT:</div>
+          <div class="pills-scroll" id="slotFilterPills">
+            <button class="filter-pill active" onclick="setSlotFilter('All', this)">All Slots (36)</button>
+            <button class="filter-pill" onclick="setSlotFilter('Pre-Workout', this)">⚡ Pre-Workout</button>
+            <button class="filter-pill" onclick="setSlotFilter('Post-Workout', this)">🍳 Post-Workout</button>
+            <button class="filter-pill" onclick="setSlotFilter('Lunch', this)">🍛 Lunch</button>
+            <button class="filter-pill" onclick="setSlotFilter('Evening Snack', this)">🥤 Evening Snack</button>
+            <button class="filter-pill" onclick="setSlotFilter('Dinner', this)">🍽️ Dinner</button>
+          </div>
+        </div>
+
+        <!-- Ingredient / Prep Tag Filter Pills -->
+        <div>
+          <div style="font-size:10px; font-weight:700; color:var(--muted); margin-bottom:5px;">FILTER BY TYPE:</div>
+          <div class="pills-scroll" id="tagFilterPills">
+            <button class="filter-pill active" onclick="setTagFilter('All', this)">All Types</button>
+            <button class="filter-pill" onclick="setTagFilter('10-Min', this)">⏱️ ≤10-Min Fast</button>
+            <button class="filter-pill" onclick="setTagFilter('Chicken', this)">🍗 Chicken</button>
+            <button class="filter-pill" onclick="setTagFilter('Eggs', this)">🥚 Eggs</button>
+            <button class="filter-pill" onclick="setTagFilter('Paneer/Veg', this)">🧀 Paneer / Veg</button>
+            <button class="filter-pill" onclick="setTagFilter('Shakes', this)">🥤 Shakes & Oats</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="recipesGrid" class="recipes-grid"></div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- VIEW 3: ₹15,000 MONTHLY SHOPPING & BUDGET TRACKER                   -->
+    <!-- =================================================================== -->
+    <section id="view-shopping" class="view-panel hidden" style="display:flex; flex-direction:column; gap:14px;">
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <strong style="font-size:16px;">Monthly Bulking Budget</strong>
+            <div style="font-size:11px; color:var(--muted);">Target: ₹15,000 / month (excluding gym membership)</div>
+          </div>
+          <div style="text-align:right;">
+            <div id="budgetTotalEst" style="font-size:20px; font-weight:800; color:#34d399;">₹14,650</div>
+            <div style="font-size:11px; color:var(--muted);">of ₹15,000 budget</div>
+          </div>
+        </div>
+
+        <div class="progress-track" style="height:10px; margin-bottom:12px;">
+          <div id="budgetBar" class="progress-fill" style="width:95%; background:linear-gradient(90deg, #10b981, #34d399);"></div>
+        </div>
+
+        <div class="grid-2" style="font-size:12px;">
+          <div class="macro-box">
+            <span style="color:var(--muted); display:block;">Monthly Supplements</span>
+            <strong id="suppSum" style="font-size:15px;">₹7,050</strong>
+          </div>
+          <div class="macro-box">
+            <span style="color:var(--muted); display:block;">Weekly Groceries (×4 wks)</span>
+            <strong id="grocSum" style="font-size:15px;">₹7,600 <span style="font-size:11px; color:var(--muted);">(₹1,900/wk)</span></strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2 grid-2-resp">
+        <!-- Supplements -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <strong style="font-size:14px;">💊 Monthly Supplements (~₹7k)</strong>
+              <div style="font-size:11px; color:var(--muted);">Tap to check off • Edit ₹ prices anytime</div>
+            </div>
+            <button class="btn btn-ghost btn-sm" onclick="resetShopSection('supplements')">Uncheck</button>
+          </div>
+          <div id="suppList"></div>
+        </div>
+
+        <!-- Weekly Groceries -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <strong style="font-size:14px;">🛒 Weekly Groceries (~₹1,900/wk)</strong>
+              <div style="font-size:11px; color:var(--muted);">Reset every weekend for fresh stock</div>
+            </div>
+            <button class="btn btn-emerald btn-sm" onclick="resetShopSection('groceries')">Reset Week</button>
+          </div>
+          <div id="grocList"></div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- VIEW 4: FRIDAY WEIGH-IN & AUTOMATED STALL-BUSTER                    -->
+    <!-- =================================================================== -->
+    <section id="view-progress" class="view-panel hidden" style="display:flex; flex-direction:column; gap:14px;">
+
+      <!-- Automated 2-Week Stall Alert -->
+      <div id="stallBanner" class="card hidden" style="border:1px solid var(--amber); background:rgba(245,158,11,0.12);">
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <strong style="color:#fbbf24; font-size:15px;">⚠️ 2-Week Weight Stall Detected (&lt; +0.25 kg/wk)</strong>
+          <p style="font-size:12px; color:#e2e8f0;">
+            Your last two Friday morning weigh-ins show a gain below your +0.25 to +0.50 kg/week target. Per your bulking rule, add <strong>+1 tbsp Peanut Butter & +1/2 Cup Cooked Rice (+200 kcal, +5g protein)</strong> daily.
+          </p>
+          <div>
+            <button class="btn btn-amber btn-sm" onclick="activateStallBuster()">⚡ Activate +200 kcal/day Surplus Now</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2 grid-2-resp">
+        <!-- Log Friday Weight -->
+        <div class="card" style="display:flex; flex-direction:column; gap:10px;">
+          <strong style="font-size:15px;">⚖️ Friday Empty-Stomach Weigh-In</strong>
+          <p style="font-size:12px; color:var(--muted);">Target rate: <strong>+0.25 to +0.50 kg/week</strong>. Start: 47.0 kg.</p>
+
+          <form onsubmit="logFridayWeight(event)" style="display:flex; flex-direction:column; gap:10px;">
+            <div>
+              <label style="font-size:11px; color:var(--muted); display:block; margin-bottom:4px;">Weigh-In Date</label>
+              <input type="date" id="wDate" required />
+            </div>
+            <div>
+              <label style="font-size:11px; color:var(--muted); display:block; margin-bottom:4px;">Morning Weight (kg)</label>
+              <input type="number" step="0.05" min="35" max="120" id="wVal" placeholder="e.g., 47.35" required />
+            </div>
+            <div>
+              <label style="font-size:11px; color:var(--muted); display:block; margin-bottom:4px;">Note (Optional)</label>
+              <input type="text" id="wNote" placeholder="e.g., Hit 2,500 kcal all week" />
+            </div>
+            <button type="submit" class="btn btn-emerald">Log Friday Weight</button>
+          </form>
+
+          <div style="border-top:1px solid var(--border); padding-top:10px; display:flex; justify-content:space-between; align-items:center; font-size:12px;">
+            <span style="color:var(--muted);">Stall-Buster (+200 kcal):</span>
+            <button id="manualStallBtn" class="btn btn-slate btn-sm" onclick="toggleStallManual()">Off (Standard)</button>
+          </div>
+        </div>
+
+        <!-- Inline SVG Trajectory Chart & History -->
+        <div class="card" style="display:flex; flex-direction:column; gap:12px;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <strong style="font-size:15px;">Weight Gain Trajectory</strong>
+              <div style="font-size:11px; color:var(--muted);">12-Week Lean Bulk Target: ~51.5 kg</div>
+            </div>
+            <div style="text-align:right; font-size:12px;">
+              <div>Gain: <strong id="totalGainStat" class="text-emerald">+0.00 kg</strong></div>
+              <div>Latest: <strong id="latestWeightStat">47.00 kg</strong></div>
+            </div>
+          </div>
+
+          <div id="weightSvgBox" style="background:var(--bg); border:1px solid var(--border); border-radius:14px; padding:10px; height:190px;"></div>
+
+          <div id="weightHistoryList" style="display:flex; flex-direction:column; gap:6px;"></div>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <!-- BOTTOM TAB NAVIGATION -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" id="nav-tracker" onclick="switchView('tracker', this)">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="4" width="18" height="18" rx="3"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M9 16l2 2 4-4"/></svg>
+      <span>Daily Plan</span>
+    </button>
+    <button class="nav-item" id="nav-recipes" onclick="switchView('recipes', this)">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 13.87A4 4 0 0 1 7.41 6a5.11 5.11 0 0 1 1.05-1.54 5 5 0 0 1 7.08 0A5.11 5.11 0 0 1 16.59 6 4 4 0 0 1 18 13.87V21H6Z"/><line x1="6" y1="17" x2="18" y2="17"/></svg>
+      <span>36 Recipes</span>
+    </button>
+    <button class="nav-item" id="nav-shopping" onclick="switchView('shopping', this)">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      <span>₹15k Shop</span>
+    </button>
+    <button class="nav-item" id="nav-progress" onclick="switchView('progress', this)">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+      <span>Progress</span>
+    </button>
+  </nav>
+
+  <!-- ===================================================================== -->
+  <!-- MODALS & DRAWERS                                                      -->
+  <!-- ===================================================================== -->
+
+  <!-- 1. SLOT-SPECIFIC MEAL OPTIONS PICKER DRAWER -->
+  <div id="slotModal" class="modal-backdrop" onclick="if(event.target===this) closeModal('slotModal')">
+    <div class="modal-sheet">
+      <div class="card-header">
+        <div>
+          <span id="slotModalTag" class="slot-pill">MEAL SLOT OPTIONS</span>
+          <h3 id="slotModalTitle" style="font-size:17px; font-weight:800; margin-top:2px;">Choose Option</h3>
+        </div>
+        <button class="btn btn-slate btn-sm" onclick="closeModal('slotModal')">✕</button>
+      </div>
+      <p style="font-size:12px; color:var(--muted); margin-bottom:12px;">
+        Curated options specifically tailored for this meal window. Tap any option to select &amp; auto-log:
+      </p>
+      <div id="slotOptionsList"></div>
+    </div>
+  </div>
+
+  <!-- 2. RECIPE DETAIL & BUILT-IN COUNTDOWN TIMER MODAL -->
+  <div id="recipeModal" class="modal-backdrop" onclick="if(event.target===this) closeModal('recipeModal')">
+    <div class="modal-sheet">
+      <div class="card-header">
+        <div>
+          <div id="rmBadges" style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:4px;"></div>
+          <h3 id="rmTitle" style="font-size:18px; font-weight:800;">Recipe Name</h3>
+        </div>
+        <button class="btn btn-slate btn-sm" onclick="closeModal('recipeModal')">✕</button>
+      </div>
+
+      <div class="grid-2" style="grid-template-columns:repeat(4,1fr); text-align:center; margin-bottom:12px;">
+        <div class="macro-box"><span style="font-size:10px; color:var(--muted); display:block;">Kcal</span><strong id="rmKcal" class="text-emerald">0</strong></div>
+        <div class="macro-box"><span style="font-size:10px; color:var(--muted); display:block;">Protein</span><strong id="rmPro" class="text-sky">0g</strong></div>
+        <div class="macro-box"><span style="font-size:10px; color:var(--muted); display:block;">Carbs</span><strong id="rmCarb">0g</strong></div>
+        <div class="macro-box"><span style="font-size:10px; color:var(--muted); display:block;">Fats</span><strong id="rmFat" class="text-amber">0g</strong></div>
+      </div>
+
+      <!-- Kitchen Timer -->
+      <div class="macro-box" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
+        <div>
+          <div style="font-size:10px; color:var(--muted); font-weight:700;">⏱️ PAN / MICROWAVE TIMER</div>
+          <div id="timerDisplay" style="font-size:22px; font-weight:800; font-variant-numeric:tabular-nums;">03:00</div>
+        </div>
+        <div style="display:flex; gap:5px; flex-wrap:wrap;">
+          <button class="btn btn-slate btn-sm" onclick="setTimer(60)">1m</button>
+          <button class="btn btn-slate btn-sm" onclick="setTimer(180)">3m</button>
+          <button class="btn btn-slate btn-sm" onclick="setTimer(300)">5m</button>
+          <button class="btn btn-slate btn-sm" onclick="setTimer(600)">10m</button>
+          <button id="timerToggleBtn" class="btn btn-emerald btn-sm" onclick="toggleTimer()">Start</button>
+        </div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:14px;">
+        <div class="macro-box">
+          <div class="section-label text-emerald" style="margin-bottom:6px;">Ingredients</div>
+          <ul id="rmIng" style="padding-left:18px; font-size:13px; color:#e2e8f0; display:flex; flex-direction:column; gap:4px;"></ul>
+        </div>
+        <div class="macro-box">
+          <div class="section-label text-sky" style="margin-bottom:6px;">Quick Method</div>
+          <ol id="rmSteps" style="padding-left:18px; font-size:13px; color:#e2e8f0; display:flex; flex-direction:column; gap:6px;"></ol>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:8px; justify-content:flex-end; flex-wrap:wrap;">
+        <button id="rmLogSlotBtn" class="btn btn-emerald">Log to Today</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. CUSTOM QUICK FOOD MODAL -->
+  <div id="customFoodModal" class="modal-backdrop" onclick="if(event.target===this) closeModal('customFoodModal')">
+    <div class="modal-sheet">
+      <div class="card-header">
+        <h3 style="font-size:16px; font-weight:800;">+ Log Extra Food / Office Snack</h3>
+        <button class="btn btn-slate btn-sm" onclick="closeModal('customFoodModal')">✕</button>
+      </div>
+      <form onsubmit="saveCustomFood(event)" style="display:flex; flex-direction:column; gap:10px;">
+        <input type="text" id="cfName" placeholder="Food name (e.g., 2 Boiled Eggs + 1 Banana)" required />
+        <div class="grid-2">
+          <input type="number" id="cfKcal" placeholder="Calories (kcal)" required />
+          <input type="number" id="cfPro" placeholder="Protein (g)" required />
+        </div>
+        <button type="submit" class="btn btn-emerald">Add to Today's Total</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 4. ADD NEW RECIPE MODAL -->
+  <div id="addRecipeModal" class="modal-backdrop" onclick="if(event.target===this) closeModal('addRecipeModal')">
+    <div class="modal-sheet">
+      <div class="card-header">
+        <h3 style="font-size:16px; font-weight:800;">Add Custom Recipe</h3>
+        <button class="btn btn-slate btn-sm" onclick="closeModal('addRecipeModal')">✕</button>
+      </div>
+      <form onsubmit="saveNewRecipe(event)" style="display:flex; flex-direction:column; gap:10px;">
+        <input type="text" id="nrTitle" placeholder="Recipe title (e.g., Spicy Chicken Wrap)" required />
+        <div class="grid-2">
+          <select id="nrSlot">
+            <option value="Pre-Workout">Pre-Workout</option>
+            <option value="Post-Workout">Post-Workout</option>
+            <option value="Lunch" selected>Lunch</option>
+            <option value="Evening Snack">Evening Snack</option>
+            <option value="Dinner">Dinner</option>
+          </select>
+          <select id="nrTag">
+            <option value="Chicken">Chicken</option>
+            <option value="Eggs">Eggs</option>
+            <option value="Paneer/Veg">Paneer/Veg</option>
+            <option value="Shakes">Shakes</option>
+          </select>
+        </div>
+        <div class="grid-2" style="grid-template-columns:repeat(4,1fr);">
+          <input type="number" id="nrTime" value="10" placeholder="Mins" required />
+          <input type="number" id="nrKcal" placeholder="Kcal" required />
+          <input type="number" id="nrPro" placeholder="Pro (g)" required />
+          <input type="number" id="nrCarb" value="40" placeholder="Carb" />
+        </div>
+        <textarea id="nrIng" rows="2" placeholder="Ingredients (comma-separated)" required></textarea>
+        <textarea id="nrSteps" rows="2" placeholder="Steps (period-separated)" required></textarea>
+        <button type="submit" class="btn btn-emerald">Save Recipe</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 5. JSON BACKUP / RESTORE MODAL -->
+  <div id="backupModal" class="modal-backdrop" onclick="if(event.target===this) closeModal('backupModal')">
+    <div class="modal-sheet">
+      <div class="card-header">
+        <h3 style="font-size:16px; font-weight:800;">Local Backup &amp; Restore</h3>
+        <button class="btn btn-slate btn-sm" onclick="closeModal('backupModal')">✕</button>
+      </div>
+      <p style="font-size:12px; color:var(--muted); margin-bottom:12px;">
+        Everything is stored offline in your browser's <code>localStorage</code>. Export a JSON snapshot anytime to move your logs between iPhone Safari and Mac/PC.
+      </p>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <button class="btn btn-emerald" onclick="exportJSON()">⬇️ Download JSON Backup</button>
+        <label class="btn btn-slate" style="cursor:pointer;">
+          ⬆️ Restore from JSON Backup
+          <input type="file" accept=".json" onchange="importJSON(event)" class="hidden" />
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // =========================================================================
+    // 1. SAFARI PWA ICON GENERATOR (512x512 PNG APPLE-TOUCH-ICON + FAVICON)
+    // =========================================================================
+    function generateAppleTouchIcon() {
+      try {
+        const size = 512;
+        const canvas = document.createElement('canvas');
+        canvas.width = size;
+        canvas.height = size;
+        const ctx = canvas.getContext('2d');
+
+        // Background Squircle Gradient
+        const bg = ctx.createLinearGradient(0, 0, size, size);
+        bg.addColorStop(0, '#1e293b');
+        bg.addColorStop(1, '#090d16');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, size, size);
+
+        // Inner emerald glow border
+        ctx.strokeStyle = '#10b981';
+        ctx.lineWidth = 14;
+        ctx.strokeRect(18, 18, size - 36, size - 36);
+
+        // Barbell Shaft
+        ctx.strokeStyle = '#94a3b8';
+        ctx.lineWidth = 22;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(110, 256);
+        ctx.lineTo(402, 256);
+        ctx.stroke();
+
+        // Left Barbell Plates (Emerald)
+        ctx.fillStyle = '#34d399';
+        ctx.fillRect(72, 196, 32, 120);
+        ctx.fillStyle = '#10b981';
+        ctx.fillRect(112, 172, 28, 168);
+
+        // Right Barbell Plates (Amber)
+        ctx.fillStyle = '#f59e0b';
+        ctx.fillRect(372, 172, 28, 168);
+        ctx.fillStyle = '#fbbf24';
+        ctx.fillRect(408, 196, 32, 120);
+
+        // Center Lightning Bolt
+        const boltGrad = ctx.createLinearGradient(180, 90, 330, 420);
+        boltGrad.addColorStop(0, '#10b981');
+        boltGrad.addColorStop(1, '#f59e0b');
+        ctx.fillStyle = boltGrad;
+        ctx.strokeStyle = '#090d16';
+        ctx.lineWidth = 10;
+        ctx.beginPath();
+        ctx.moveTo(286, 92);
+        ctx.lineTo(176, 272);
+        ctx.lineTo(256, 272);
+        ctx.lineTo(226, 420);
+        ctx.lineTo(336, 240);
+        ctx.lineTo(256, 240);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        const pngUrl = canvas.toDataURL('image/png');
+
+        const appleLink = document.createElement('link');
+        appleLink.rel = 'apple-touch-icon';
+        appleLink.sizes = '512x512';
+        appleLink.href = pngUrl;
+        document.head.appendChild(appleLink);
+
+        const iconLink = document.createElement('link');
+        iconLink.rel = 'icon';
+        iconLink.type = 'image/png';
+        iconLink.href = pngUrl;
+        document.head.appendChild(iconLink);
+      } catch (e) {
+        console.warn('Icon canvas generation skipped:', e);
+      }
+    }
+
+    // =========================================================================
+    // 2. PERSONALIZED MEAL SLOTS & SLOT-SPECIFIC CURATED OPTIONS
+    // =========================================================================
+    const MEAL_SLOTS = [
+      {
+        id: 'pre',
+        label: '1. Pre-Workout',
+        time: '45 mins pre-gym',
+        defaultWFH: 0,
+        defaultWFO: 0,
+        options: [
+          { tag: 'Plan Default', name: '1 Large Banana + 30g Oats (in water) + 1/2 Scoop Whey (+ Pre-Workout)', kcal: 320, pro: 18, carb: 48, fat: 4 },
+          { tag: 'Zero-Cook Fast', name: '2 Brown Bread Toast + 1 tbsp Peanut Butter + Black Coffee', kcal: 310, pro: 10, carb: 36, fat: 11 },
+          { tag: 'Light & High-P', name: '1 Banana + 1 Scoop Whey in Water + 5 Soaked Almonds', kcal: 285, pro: 27, carb: 32, fat: 5 },
+          { tag: 'Alpino Oats', name: '40g Alpino High-Protein Oats + 1/2 Banana + Black Coffee', kcal: 330, pro: 15, carb: 46, fat: 8 },
+          { tag: 'Egg & Fruit', name: '2 Boiled Egg Whites + 1 Large Banana + 1 Date + Pre-Workout', kcal: 240, pro: 14, carb: 44, fat: 1 },
+          { tag: 'Indian Quick', name: '1 Cup Quick Poha + 1/2 Scoop Whey Shake in Water', kcal: 340, pro: 16, carb: 52, fat: 6 }
+        ]
+      },
+      {
+        id: 'post',
+        label: '2. Post-Workout Breakfast',
+        time: 'Within 1 hr post-gym',
+        defaultWFH: 0,
+        defaultWFO: 1,
+        options: [
+          { tag: 'WFH Default', name: '4 Whole Eggs (Omelette/Bhurji) + 3 Toast w/ 1 tbsp PB + 1/2 Scoop Whey in 250ml Milk + 3g Creatine', kcal: 780, pro: 45, carb: 62, fat: 34 },
+          { tag: 'WFO Fast Default', name: '4 Boiled Eggs + 3 Slices PB Toast + 1/2 Scoop Whey in 250ml Milk + 3g Creatine', kcal: 780, pro: 45, carb: 62, fat: 34 },
+          { tag: 'Oats Power Bowl', name: '60g Alpino Oats + 250ml Milk + 1 Scoop Whey + 1 tbsp PB + 1 Banana', kcal: 790, pro: 46, carb: 82, fat: 26 },
+          { tag: 'Veg Paneer Swap', name: '120g Paneer Bhurji + 3 Slices Toast + 1 Scoop Whey in 250ml Milk', kcal: 760, pro: 44, carb: 60, fat: 36 },
+          { tag: '7-Egg Roti Feast', name: '5 Egg Whites + 2 Whole Egg Masala Omelette + 3 Rotis + 250ml Milk', kcal: 740, pro: 43, carb: 74, fat: 22 },
+          { tag: 'Max Protein', name: '4 Eggs + 75g Chicken Breast Scramble + 3 Toast + Whey Milk Shake', kcal: 810, pro: 56, carb: 60, fat: 32 }
+        ]
+      },
+      {
+        id: 'lunch',
+        label: '3. Power Lunch',
+        time: '1:00 – 2:00 PM',
+        defaultWFH: 0,
+        defaultWFO: 2,
+        options: [
+          { tag: 'WFH Chicken Default', name: '1.5 Cups Cooked Rice + 150g Pan-Seared Chicken + 1 Bowl Dal/Curd + Veggies', kcal: 650, pro: 42, carb: 76, fat: 14 },
+          { tag: 'WFH Paneer Swap', name: '1.5 Cups Cooked Rice + 120g Paneer + 1 Bowl Dal + Curd + Veggies', kcal: 670, pro: 32, carb: 76, fat: 24 },
+          { tag: 'WFO Cafeteria Chicken', name: 'Rice or 2–3 Rotis + Double Portion Chicken Curry + Dal (No Fried Items)', kcal: 660, pro: 40, carb: 74, fat: 18 },
+          { tag: 'WFO Cafeteria Egg', name: '3 Rotis + Double Egg Curry (3 Eggs) + Dal + Curd', kcal: 640, pro: 31, carb: 76, fat: 20 },
+          { tag: 'WFO Cafeteria Paneer', name: 'Rice + 2 Rotis + Double Paneer Curry + Dal', kcal: 680, pro: 30, carb: 78, fat: 25 },
+          { tag: '10-Min Stir-Fry', name: '10-Min Chicken & Veggie Stir-Fry + 1.5 Cups Rice + 1 Cup Curd', kcal: 655, pro: 43, carb: 78, fat: 14 }
+        ]
+      },
+      {
+        id: 'snack',
+        label: '4. Evening Snack',
+        time: '5:00 PM',
+        defaultWFH: 0,
+        defaultWFO: 1,
+        options: [
+          { tag: 'WFH Smoothie Default', name: 'High-Calorie Smoothie (250ml Milk + 1 Banana + 1 tbsp PB + 10 Almonds)', kcal: 420, pro: 15, carb: 46, fat: 19 },
+          { tag: 'WFO Office Desk Default', name: '1 Cup Roasted Chana/Makhana + 1 Handful Mixed Nuts + 1 Fruit', kcal: 410, pro: 14, carb: 48, fat: 17 },
+          { tag: 'Mass Gainer Shake', name: '250ml Milk + 1/2 Scoop Whey + 1 tbsp PB + 30g Oats + 1 Banana', kcal: 490, pro: 26, carb: 58, fat: 16 },
+          { tag: 'Boiled Egg & Nuts', name: '3 Boiled Eggs + 1 Banana + 10 Cashews', kcal: 395, pro: 21, carb: 34, fat: 19 },
+          { tag: 'PB Banana Sandwich', name: '2 Whole Wheat Bread + 2 tbsp Peanut Butter + 1 Sliced Banana', kcal: 440, pro: 14, carb: 58, fat: 18 },
+          { tag: 'Curd & Nuts Bowl', name: '200g Greek Yogurt / Hung Curd + Mixed Nuts + 1 tsp Honey', kcal: 380, pro: 18, carb: 32, fat: 18 }
+        ]
+      },
+      {
+        id: 'dinner',
+        label: '5. Recovery Dinner',
+        time: '8:30 – 9:30 PM',
+        defaultWFH: 0,
+        defaultWFO: 1,
+        options: [
+          { tag: 'WFH Default', name: '2–3 Rotis (or 1 Cup Rice) + 150g Chicken/Paneer Bhurji + 1 tsp Ghee + Salad', kcal: 560, pro: 38, carb: 56, fat: 18 },
+          { tag: 'WFO 10-Min Pan Bhurji', name: '2–3 Rotis + 3-Egg & 50g Paneer Bhurji + Sautéed Veggies', kcal: 550, pro: 32, carb: 54, fat: 21 },
+          { tag: 'WFO 6-Min Batch Chicken', name: '150g Pre-Marinated Chicken (6-min sear) + 2 Rotis + Garlic Butter Veggies', kcal: 540, pro: 41, carb: 50, fat: 16 },
+          { tag: 'Chicken Rice Bowl', name: '1 Cup Rice + 150g Pepper Chicken + 1 tsp Ghee + Cucumber Salad', kcal: 570, pro: 40, carb: 60, fat: 15 },
+          { tag: 'Veg Soya & Paneer', name: 'Soya & Paneer Masala + 3 Rotis + 1 tsp Ghee', kcal: 550, pro: 35, carb: 58, fat: 17 },
+          { tag: '4-Egg Curry Rice', name: '4-Egg Curry / Bhurji + 1 Cup Rice + Garlic Butter Veggies', kcal: 565, pro: 30, carb: 62, fat: 20 }
+        ]
+      }
+    ];
+
+    // =========================================================================
+    // 3. 36 HIGH-PROTEIN RECIPES (TAGGED BY MEAL SLOT & TYPE)
+    // =========================================================================
+    const RECIPES = [
+      // USER CORE 4 RECIPES
+      { id: 'r1', title: '750g Batch Chicken Marinade (5 Servings)', slot: 'Dinner', tags: ['10-Min', 'Chicken'], time: 6, kcal: 245, pro: 36, carb: 4, fat: 8,
+        ing: ['750g boneless chicken breast cubes', '3 tbsp thick curd', '1 tbsp ginger-garlic paste', '1 tsp Kashmiri chili powder', '1/2 tsp turmeric', '1 tsp garam masala/peri-peri', 'Lemon juice & salt'],
+        steps: ['Whisk curd, ginger-garlic paste, spices, lemon juice, and salt in a bowl.', 'Coat 750g chicken cubes well and store in fridge for 3–4 days.', 'To cook 150g: Sear in 1 tsp oil/ghee for 3 minutes per side.'] },
+      { id: 'r2', title: '10-Min Chicken & Veggie Stir-Fry', slot: 'Lunch', tags: ['10-Min', 'Chicken'], time: 10, kcal: 340, pro: 38, carb: 16, fat: 12,
+        ing: ['150g marinated chicken cubes', '1 cup chopped capsicum, broccoli & carrots', '3 cloves crushed garlic', '1 tsp oil', '1 tsp soy sauce & black pepper'],
+        steps: ['Sauté crushed garlic in 1 tsp oil for 15 seconds.', 'High-heat stir-fry 1 cup chopped veggies for 3 minutes.', 'Toss in 150g marinated chicken, 1 tsp soy sauce & black pepper; cook 4–5 mins.'] },
+      { id: 'r3', title: '10-Min Paneer & Egg Bhurji', slot: 'Dinner', tags: ['10-Min', 'Eggs', 'Paneer/Veg'], time: 10, kcal: 410, pro: 29, carb: 10, fat: 28,
+        ing: ['3 whole eggs (whisked)', '50g crumbled paneer', '1 chopped onion & green chili', '1 chopped tomato', '1 tsp ghee', 'Turmeric, pav bhaji/kitchen king masala & salt'],
+        steps: ['Sauté chopped onion & green chili in 1 tsp ghee for 2 minutes.', 'Add chopped tomato, turmeric, pav bhaji masala & salt; cook 2 minutes.', 'Scramble in 50g crumbled paneer + 3 whisked eggs for 2–3 minutes.'] },
+      { id: 'r4', title: '5-Min Garlic Butter Veggies', slot: 'Dinner', tags: ['10-Min', 'Paneer/Veg'], time: 5, kcal: 145, pro: 5, carb: 18, fat: 6,
+        ing: ['1.5 cups mixed veggies (broccoli, carrots, corn, peas)', '2 tbsp water', '1 tsp butter', 'Salt, black pepper & oregano'],
+        steps: ['Microwave 1.5 cups mixed veggies with 2 tbsp water for 3 minutes.', 'Drain water completely.', 'Toss veggies in hot pan with 1 tsp butter, salt, pepper & oregano for 60 seconds.'] },
+
+      // PRE-WORKOUT RECIPES (5 - 10)
+      { id: 'r5', title: '45-Min Pre-Gym Banana Whey Oats', slot: 'Pre-Workout', tags: ['10-Min', 'Shakes'], time: 4, kcal: 320, pro: 18, carb: 48, fat: 4,
+        ing: ['1 large ripe banana', '30g rolled/high-protein oats', '150ml water', '1/2 scoop whey protein'],
+        steps: ['Microwave 30g oats with 150ml water for 90 seconds.', 'Stir in 1/2 scoop whey once slightly cooled.', 'Top with sliced banana and eat 45 mins before workout.'] },
+      { id: 'r6', title: 'Iced Espresso Banana Whey Smoothie', slot: 'Pre-Workout', tags: ['10-Min', 'Shakes'], time: 3, kcal: 280, pro: 25, carb: 38, fat: 3,
+        ing: ['1 large frozen banana', '1 scoop whey protein', '1.5 tsp instant coffee in 150ml cold water', 'Ice cubes'],
+        steps: ['Blend coffee water, banana, whey protein, and ice for 20 seconds.', 'Drink 30–45 mins pre-workout for clean energy and amino acids.'] },
+      { id: 'r7', title: 'Cinnamon Peanut Butter Toast & Banana', slot: 'Pre-Workout', tags: ['10-Min', 'Paneer/Veg'], time: 3, kcal: 345, pro: 11, carb: 52, fat: 11,
+        ing: ['2 slices whole wheat bread', '1 tbsp natural peanut butter', '1/2 sliced banana', 'Pinch of cinnamon'],
+        steps: ['Toast 2 bread slices crisp.', 'Spread 1 tbsp peanut butter, layer sliced banana, and dust with cinnamon.'] },
+      { id: 'r8', title: '5-Min High-Protein Poha Bowl', slot: 'Pre-Workout', tags: ['10-Min', 'Paneer/Veg'], time: 6, kcal: 340, pro: 16, carb: 52, fat: 6,
+        ing: ['1 cup flattened rice (poha)', '1/2 scoop unflavored/vanilla whey (in shaker)', '1 tsp ghee, mustard seeds, curry leaves, green peas & peanuts'],
+        steps: ['Rinse poha and drain.', 'Temper mustard seeds, curry leaves, peas, and 10 peanuts in 1 tsp ghee; toss poha 2 mins.', 'Pair with 1/2 scoop whey in water.'] },
+      { id: 'r9', title: 'Apple Cinnamon Whey Overnight Oats', slot: 'Pre-Workout', tags: ['10-Min', 'Shakes'], time: 4, kcal: 335, pro: 22, carb: 46, fat: 6,
+        ing: ['35g oats', '1/2 scoop whey', '120ml milk', '1/2 chopped apple & cinnamon'],
+        steps: ['Mix milk, whey, oats, and cinnamon in a jar; refrigerate overnight.', 'Top with chopped apple before morning gym.'] },
+      { id: 'r10', title: 'Egg White & Banana Energy Plate', slot: 'Pre-Workout', tags: ['10-Min', 'Eggs'], time: 5, kcal: 245, pro: 16, carb: 42, fat: 1,
+        ing: ['3 boiled egg whites', '1 large banana', '2 dates', 'Black coffee'],
+        steps: ['Slice boiled egg whites with pinch of salt & pepper.', 'Eat alongside banana and dates 35 mins prior to lifting.'] },
+
+      // POST-WORKOUT BREAKFAST RECIPES (11 - 17)
+      { id: 'r11', title: 'Classic 4-Egg Masala Omelette & PB Toast', slot: 'Post-Workout', tags: ['10-Min', 'Eggs'], time: 8, kcal: 780, pro: 45, carb: 62, fat: 34,
+        ing: ['4 whole eggs', '3 whole wheat bread slices', '1 tbsp peanut butter', '1/2 scoop whey in 250ml milk + 3g creatine', 'Onion, tomato, chili & 1 tsp butter'],
+        steps: ['Whisk 4 eggs with chopped onion, tomato, chili & salt; cook in 1 tsp butter.', 'Toast 3 bread slices and spread 1 tbsp peanut butter.', 'Serve with whey + creatine shake in 250ml milk.'] },
+      { id: 'r12', title: 'WFO Office Express: 4 Boiled Eggs & PB Toast', slot: 'Post-Workout', tags: ['10-Min', 'Eggs'], time: 5, kcal: 780, pro: 45, carb: 62, fat: 34,
+        ing: ['4 boiled eggs (pre-boiled night before)', '3 slices whole wheat bread', '1 tbsp peanut butter', '1/2 scoop whey + 3g creatine in 250ml milk'],
+        steps: ['Peel 4 boiled eggs and season with chaat masala.', 'Toast 3 slices bread with peanut butter and shake whey + creatine in milk.'] },
+      { id: 'r13', title: 'Alpino High-Protein Oats & Whey Power Bowl', slot: 'Post-Workout', tags: ['10-Min', 'Shakes'], time: 6, kcal: 790, pro: 46, carb: 82, fat: 26,
+        ing: ['60g Alpino High-Protein Oats', '250ml milk', '1 scoop whey protein', '1 tbsp peanut butter', '1 sliced banana & 3g creatine'],
+        steps: ['Cook 60g Alpino oats in 250ml milk for 3 minutes.', 'Stir in 1 scoop whey, 3g creatine, and peanut butter; top with banana.'] },
+      { id: 'r14', title: 'High-Protein PB Egg French Toast', slot: 'Post-Workout', tags: ['10-Min', 'Eggs'], time: 10, kcal: 640, pro: 35, carb: 64, fat: 25,
+        ing: ['3 slices whole wheat bread', '3 whole eggs', '50ml milk', '1 tbsp peanut butter', '1/2 tsp cinnamon & 1 tsp butter'],
+        steps: ['Whisk 3 eggs, milk, and cinnamon; dip bread slices.', 'Pan-toast in 1 tsp butter 2.5 mins per side and spread peanut butter on top.'] },
+      { id: 'r15', title: 'Cheesy Masala Omelette Folded Sandwich', slot: 'Post-Workout', tags: ['10-Min', 'Eggs'], time: 8, kcal: 560, pro: 32, carb: 44, fat: 27,
+        ing: ['3 whole eggs', '2 slices bread', '40g grated paneer or 1 cheese slice', 'Onion, coriander, chili & 1 tsp butter'],
+        steps: ['Pour seasoned eggs in pan, lay 2 bread slices on top, flip once set.', 'Add grated paneer, fold edges over bread, fold in half and crisp.'] },
+      { id: 'r16', title: '10-Min Paneer Bhurji & 3 Toast Combo', slot: 'Post-Workout', tags: ['10-Min', 'Paneer/Veg'], time: 10, kcal: 760, pro: 44, carb: 60, fat: 36,
+        ing: ['120g crumbled paneer', '3 slices toast', '1 scoop whey in 250ml milk', '1 onion, 1 tomato, 1 tsp ghee & pav bhaji masala'],
+        steps: ['Sauté onion, tomato, and pav bhaji masala in 1 tsp ghee; scramble in 120g paneer for 3 mins.', 'Serve with 3 toasted bread slices and whey milk shake.'] },
+      { id: 'r17', title: 'Savory Masala Oats with 3 Poached Eggs', slot: 'Post-Workout', tags: ['10-Min', 'Eggs'], time: 9, kcal: 510, pro: 32, carb: 46, fat: 21,
+        ing: ['50g rolled oats', '3 whole eggs', '1.5 cups water', '1/2 cup mixed veggies', 'Turmeric & pav bhaji masala'],
+        steps: ['Simmer oats, veggies, water, and spices for 3 minutes.', 'Crack 3 eggs directly into pockets, cover lid, and poach 4 minutes.'] },
+
+      // LUNCH RECIPES (18 - 24)
+      { id: 'r18', title: 'Peri-Peri Chicken & 1.5 Cup Rice Bowl', slot: 'Lunch', tags: ['Chicken'], time: 12, kcal: 650, pro: 42, carb: 76, fat: 14,
+        ing: ['150g chicken breast strips', '1.5 cups cooked rice', '1.5 tsp peri-peri spice', '1 tsp oil', '1/2 cup sweet corn & curd'],
+        steps: ['Coat chicken in peri-peri spice and sear 3.5 mins per side.', 'Serve over warm rice with sweet corn and 1 bowl curd.'] },
+      { id: 'r19', title: '10-Min Chicken & Egg Fried Rice', slot: 'Lunch', tags: ['10-Min', 'Chicken', 'Eggs'], time: 10, kcal: 660, pro: 46, carb: 70, fat: 19,
+        ing: ['1.5 cups cold cooked rice', '120g diced batch chicken', '2 whole eggs', '1/2 cup mixed veggies', '1.5 tsp soy sauce & 1 tsp oil'],
+        steps: ['Scramble 2 eggs in 1 tsp oil; toss in diced chicken and veggies for 3 mins.', 'Add cold rice and soy sauce; toss on high heat 3 minutes.'] },
+      { id: 'r20', title: 'Tawa Curd Chicken Tikka & Dal Rice', slot: 'Lunch', tags: ['10-Min', 'Chicken'], time: 10, kcal: 650, pro: 42, carb: 75, fat: 15,
+        ing: ['150g batch curd-marinated chicken', '1.5 cups cooked rice', '1 bowl dal', '1 tsp ghee & chaat masala'],
+        steps: ['Sear marinated chicken on hot tawa 3 mins per side.', 'Serve alongside 1.5 cups rice and 1 bowl dal.'] },
+      { id: 'r21', title: '12-Min Masala Chicken Keema & Rice', slot: 'Lunch', tags: ['Chicken'], time: 12, kcal: 640, pro: 43, carb: 74, fat: 16,
+        ing: ['150g minced chicken', '1/3 cup green peas', '1 onion, 1 tomato, 1 tsp ginger-garlic paste', '1.5 cups cooked rice & 1 tsp ghee'],
+        steps: ['Sauté onion, ginger-garlic, tomato & garam masala in 1 tsp ghee.', 'Cook minced chicken and peas 6–7 mins; serve with rice.'] },
+      { id: 'r22', title: '12-Min Chilli Paneer Dry & Rice Bowl', slot: 'Lunch', tags: ['Paneer/Veg'], time: 12, kcal: 670, pro: 30, carb: 78, fat: 26,
+        ing: ['120g paneer cubes', '1 cup capsicum & onion', '1 tbsp soy sauce & 1 tsp chili sauce', '1.5 cups cooked rice'],
+        steps: ['Sear paneer cubes 3 mins until golden; toss in garlic, capsicum & onion.', 'Glaze with soy & chili sauce; serve with 1.5 cups rice.'] },
+      { id: 'r23', title: '15-Min Soya Chunk Masala Pulao & Curd', slot: 'Lunch', tags: ['Paneer/Veg'], time: 15, kcal: 630, pro: 36, carb: 84, fat: 14,
+        ing: ['50g dry soya chunks (boiled & squeezed)', '1.5 cups cooked rice', '1/2 cup mixed veggies', '1 bowl curd & 1 tsp ghee'],
+        steps: ['Sauté squeezed soya chunks and veggies in 1 tsp ghee with biryani masala.', 'Toss in rice 2 minutes and serve with 1 bowl thick curd.'] },
+      { id: 'r24', title: 'Dal Tadka & Pan-Roasted Paneer Bowl', slot: 'Lunch', tags: ['Paneer/Veg'], time: 12, kcal: 660, pro: 34, carb: 76, fat: 22,
+        ing: ['1 cup thick dal', '100g paneer cubes', '1.5 cups cooked rice', '1 tsp ghee, cumin & garlic'],
+        steps: ['Pan-sear paneer cubes until golden; temper dal with cumin & garlic in 1 tsp ghee.', 'Serve both over warm rice.'] },
+
+      // EVENING SNACK RECIPES (25 - 30)
+      { id: 'r25', title: '420-Calorie WFH PB Banana Almond Smoothie', slot: 'Evening Snack', tags: ['10-Min', 'Shakes'], time: 3, kcal: 420, pro: 15, carb: 46, fat: 19,
+        ing: ['250ml milk', '1 large banana', '1 tbsp natural peanut butter', '10 almonds'],
+        steps: ['Blend almonds first, then add milk, banana, and peanut butter.', 'Blend 25 seconds until creamy.'] },
+      { id: 'r26', title: '950-Calorie Hardgainer Catch-Up Shake', slot: 'Evening Snack', tags: ['10-Min', 'Shakes'], time: 4, kcal: 950, pro: 48, carb: 112, fat: 32,
+        ing: ['300ml full-cream milk', '1 scoop whey', '50g oats', '2 bananas', '1.5 tbsp peanut butter & 10 almonds'],
+        steps: ['Blend oats & almonds into powder, then blend with milk, whey, bananas & PB.', 'Use whenever you miss lunch/breakfast calories!'] },
+      { id: 'r27', title: 'Mango / Banana Lassi Whey Smoothie', slot: 'Evening Snack', tags: ['10-Min', 'Shakes'], time: 3, kcal: 410, pro: 32, carb: 48, fat: 9,
+        ing: ['150g thick curd', '1 scoop vanilla whey', '1 ripe banana or mango', '100ml cold water & cardamom'],
+        steps: ['Blend curd, whey, fruit, water, and pinch of elaichi for 20 seconds.'] },
+      { id: 'r28', title: '2-Min Chocolate PB Whey Mug Cake', slot: 'Evening Snack', tags: ['10-Min', 'Shakes', 'Eggs'], time: 3, kcal: 460, pro: 34, carb: 44, fat: 16,
+        ing: ['1/2 mashed banana', '1 scoop chocolate whey', '30g oat flour', '1 egg', '1 tbsp peanut butter & 1/4 tsp baking powder'],
+        steps: ['Whisk banana, egg, oat flour, whey & baking powder in a mug; drop PB in center.', 'Microwave 80 seconds until fudgy.'] },
+      { id: 'r29', title: 'Paneer & Sweet Corn Grilled Sandwich', slot: 'Evening Snack', tags: ['10-Min', 'Paneer/Veg'], time: 10, kcal: 480, pro: 25, carb: 48, fat: 20,
+        ing: ['90g crumbled paneer', '1/4 cup sweet corn', '3 slices whole wheat bread', '1 tbsp curd, oregano & 1 tsp butter'],
+        steps: ['Mix paneer, corn, curd, salt & oregano; layer between bread.', 'Toast crisp on buttered tawa 2.5 mins per side.'] },
+      { id: 'r30', title: 'Chocolate Whey & Almond Chia Pudding', slot: 'Evening Snack', tags: ['10-Min', 'Shakes'], time: 5, kcal: 420, pro: 33, carb: 26, fat: 20,
+        ing: ['250ml milk', '1 scoop chocolate whey', '2 tbsp chia seeds', '10 chopped almonds'],
+        steps: ['Shake milk & chocolate whey smoothly; stir in chia seeds and chill 1 hr.', 'Top with chopped almonds.'] },
+
+      // DINNER RECIPES (31 - 36)
+      { id: 'r31', title: 'Double Egg & Batch Chicken Kathi Roll', slot: 'Dinner', tags: ['10-Min', 'Chicken', 'Eggs'], time: 10, kcal: 590, pro: 44, carb: 52, fat: 21,
+        ing: ['2 whole wheat rotis', '2 whole eggs', '100g cooked batch chicken', 'Sliced onion, chaat masala & 1 tbsp mint curd'],
+        steps: ['Cook 1 beaten egg onto each roti on a hot tawa.', 'Fill with warm batch chicken, onions, chaat masala & mint curd; roll tight.'] },
+      { id: 'r32', title: 'Garlic Butter Lemon Pepper Chicken & Rotis', slot: 'Dinner', tags: ['10-Min', 'Chicken'], time: 10, kcal: 540, pro: 41, carb: 50, fat: 18,
+        ing: ['150g chicken breast', '2–3 rotis', '1.5 tsp butter', '4 cloves minced garlic, black pepper & lemon juice'],
+        steps: ['Sear seasoned chicken in butter 3.5 mins per side; baste with garlic & lemon.', 'Serve with warm rotis and salad.'] },
+      { id: 'r33', title: 'Honey Soy Sesame Chicken & Veggie Bowl', slot: 'Dinner', tags: ['10-Min', 'Chicken'], time: 10, kcal: 550, pro: 39, carb: 62, fat: 14,
+        ing: ['150g chicken cubes', '1 cup cooked rice', '1 tbsp soy sauce & 1.5 tsp honey', '1 tsp sesame seeds & 1 cup broccoli'],
+        steps: ['Sear chicken cubes 5 mins; glaze with soy sauce, honey & sesame seeds.', 'Serve with 1 cup rice and steamed broccoli.'] },
+      { id: 'r34', title: '10-Min Boiled Egg Tikka Masala & Rotis', slot: 'Dinner', tags: ['10-Min', 'Eggs'], time: 10, kcal: 570, pro: 33, carb: 54, fat: 25,
+        ing: ['4 boiled eggs (halved)', '2–3 rotis', '1 onion & 1 tomato', '2 tbsp curd, 1 tsp ghee & garam masala'],
+        steps: ['Sauté onion, tomato, spices & curd in 1 tsp ghee for 4 mins.', 'Simmer halved boiled eggs in gravy 2 mins; serve with rotis.'] },
+      { id: 'r35', title: 'Anda Ghotala (Spiced Egg & Paneer) + Rotis', slot: 'Dinner', tags: ['10-Min', 'Eggs', 'Paneer/Veg'], time: 10, kcal: 580, pro: 36, carb: 52, fat: 26,
+        ing: ['2 boiled eggs (grated) + 2 raw eggs', '40g grated paneer', '2–3 rotis', '1 onion, 1 tomato, 1 tsp pav bhaji masala & 1 tsp butter'],
+        steps: ['Cook onion, tomato & pav bhaji masala in butter; add grated boiled eggs & paneer.', 'Scramble in 2 raw eggs 2 mins until creamy; eat with rotis.'] },
+      { id: 'r36', title: '10-Min Matar Paneer Bhurji & 3 Rotis', slot: 'Dinner', tags: ['10-Min', 'Paneer/Veg'], time: 10, kcal: 580, pro: 31, carb: 60, fat: 24,
+        ing: ['120g crumbled paneer', '1/3 cup green peas', '3 whole wheat rotis', '1 onion, 1 tomato, 1 tsp ghee & garam masala'],
+        steps: ['Sauté onion, tomato, peas & spices in 1 tsp ghee 3 mins.', 'Fold in 120g crumbled paneer 2 mins; serve with 3 rotis.'] }
+    ];
+
+    // =========================================================================
+    // 4. SHOPPING LIST (₹15,000 MONTHLY BUDGET)
+    // =========================================================================
+    const DEFAULT_SHOPPING = {
+      supplements: [
+        { id: 's1', name: 'Whey Protein (2 kg tub – AS-IT-IS ATOM / MB Biozyme)', price: 4200, checked: false },
+        { id: 's2', name: 'Micronised Creatine Monohydrate (250g – Wellcore)', price: 750, checked: false },
+        { id: 's3', name: 'High-Protein Oats (1 kg – Alpino Super Oats PB)', price: 450, checked: false },
+        { id: 's4', name: 'Morning Pre-Workout (Optional – MB Pre Workout 200 Xtreme)', price: 1100, checked: false },
+        { id: 's5', name: 'Digital Kitchen Scale (~₹350) + Shaker Bottle (~₹200)', price: 550, checked: false }
+      ],
+      groceries: [
+        { id: 'g1', name: '30 Whole Eggs (1 Tray)', price: 210, checked: false },
+        { id: 'g2', name: '1.5 kg Boneless Chicken Breast', price: 450, checked: false },
+        { id: 'g3', name: '400g Paneer', price: 180, checked: false },
+        { id: 'g4', name: '1 kg Curd / Greek Yogurt + 4–5 L Milk', price: 380, checked: false },
+        { id: 'g5', name: 'Rice, Whole Wheat Bread, Poha / Upma Rava', price: 180, checked: false },
+        { id: 'g6', name: '12 Bananas + Potatoes / Sweet Potatoes', price: 120, checked: false },
+        { id: 'g7', name: 'Natural Peanut Butter (1 kg), Almonds/Cashews & Ghee', price: 220, checked: false },
+        { id: 'g8', name: 'Mixed Veggies (Capsicum, Broccoli, Carrots, Peas, Corn)', price: 160, checked: false }
+      ]
+    };
+
+    // =========================================================================
+    // 5. STATE MANAGEMENT & LOCALSTORAGE
+    // =========================================================================
+    const STORE_KEY = 'bulkos_pwa_state_v2';
+
+    function todayISO() {
+      const d = new Date();
+      return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().split('T')[0];
+    }
+
+    let state = {
+      date: todayISO(),
+      surplusActive: false,
+      batchPrep: { timestamp: null, portionsLeft: 0 },
+      days: {},
+      customRecipes: [],
+      shopping: JSON.parse(JSON.stringify(DEFAULT_SHOPPING)),
+      weights: [{ id: 'w0', date: todayISO(), weight: 47.0, note: 'Starting Baseline (30M, 5\'5")' }]
+    };
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          state = { ...state, ...parsed, date: todayISO() };
+        }
+      } catch (e) { console.error(e); }
+      ensureDay(state.date);
+    }
+
+    function saveState() {
+      try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) { console.error(e); }
+    }
+
+    function ensureDay(d) {
+      if (!state.days[d]) {
+        state.days[d] = {
+          mode: 'WFH',
+          checked: { pre: false, post: false, lunch: false, snack: false, dinner: false },
+          selectedOptionIdx: { pre: 0, post: 0, lunch: 0, snack: 0, dinner: 0 },
+          customSlotOverride: {}, // slotId -> { name, kcal, pro }
+          habits: { creatine: false, workout: false, glasses: 0 },
+          extraFoods: []
+        };
+      }
+      return state.days[d];
+    }
+
+    function toast(msg) {
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.classList.add('show');
+      clearTimeout(window._toastT);
+      window._toastT = setTimeout(() => el.classList.remove('show'), 2500);
+    }
+
+    // =========================================================================
+    // 6. VIEW SWITCHING & DATE / WFH-WFO CONTROLS
+    // =========================================================================
+    function switchView(name, btnEl) {
+      document.querySelectorAll('.view-panel').forEach(p => p.classList.add('hidden'));
+      document.getElementById('view-' + name).classList.remove('hidden');
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      if (btnEl) btnEl.classList.add('active');
+
+      if (name === 'tracker') renderTracker();
+      if (name === 'recipes') { renderBatchStatus(); renderRecipes(); }
+      if (name === 'shopping') renderShopping();
+      if (name === 'progress') renderProgress();
+    }
+
+    function shiftDate(delta) {
+      const cur = new Date(state.date + 'T00:00:00');
+      cur.setDate(cur.getDate() + delta);
+      state.date = new Date(cur.getTime() - cur.getTimezoneOffset() * 60000).toISOString().split('T')[0];
+      ensureDay(state.date);
+      renderTracker();
+    }
+
+    function jumpToday() {
+      state.date = todayISO();
+      ensureDay(state.date);
+      renderTracker();
+    }
+
+    function setDayMode(mode) {
+      const day = ensureDay(state.date);
+      day.mode = mode;
+      // Switch uncustomized slots to the mode's default option index
+      MEAL_SLOTS.forEach(slot => {
+        if (!day.customSlotOverride[slot.id]) {
+          day.selectedOptionIdx[slot.id] = mode === 'WFH' ? slot.defaultWFH : slot.defaultWFO;
+        }
+      });
+      saveState();
+      renderTracker();
+      toast(mode === 'WFH' ? '🏠 Switched to WFH Plan' : '🏢 Switched to WFO Office Plan');
+    }
+
+    // =========================================================================
+    // 7. DAILY TRACKER & SLOT-SPECIFIC OPTIONS PICKER
+    // =========================================================================
+    function getActiveOptionForSlot(day, slot) {
+      if (day.customSlotOverride && day.customSlotOverride[slot.id]) {
+        return day.customSlotOverride[slot.id];
+      }
+      const idx = day.selectedOptionIdx[slot.id] ?? (day.mode === 'WFH' ? slot.defaultWFH : slot.defaultWFO);
+      return slot.options[idx] || slot.options[0];
+    }
+
+    function renderTracker() {
+      const day = ensureDay(state.date);
+      const isToday = state.date === todayISO();
+      const dObj = new Date(state.date + 'T00:00:00');
+      const fullStr = dObj.toLocaleDateString('en-IN', { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' });
+
+      document.getElementById('dateTitle').textContent = isToday ? 'Today' : fullStr.split(',')[0];
+      document.getElementById('dateSub').textContent = fullStr;
+      document.getElementById('todayBtn').classList.toggle('hidden', isToday);
+
+      document.getElementById('btnWFH').className = 'mode-btn ' + (day.mode === 'WFH' ? 'active-wfh' : '');
+      document.getElementById('btnWFO').className = 'mode-btn ' + (day.mode === 'WFO' ? 'active-wfo' : '');
+      document.getElementById('slotsHeaderLabel').textContent = `5 Meal Slots • ${day.mode} Plan`;
+
+      // Calculate consumed macros
+      let kcal = 0, pro = 0;
+      MEAL_SLOTS.forEach(slot => {
+        if (day.checked[slot.id]) {
+          const opt = getActiveOptionForSlot(day, slot);
+          kcal += opt.kcal;
+          pro += opt.pro;
+        }
+      });
+      (day.extraFoods || []).forEach(f => { kcal += f.kcal; pro += f.pro; });
+
+      const extraKcal = state.surplusActive ? 200 : 0;
+      const extraPro = state.surplusActive ? 5 : 0;
+      const targetKcal = 2475 + extraKcal;
+      const targetPro = 120 + extraPro;
+
+      document.getElementById('stallBadge').classList.toggle('hidden', !state.surplusActive);
+      document.getElementById('calVal').textContent = kcal.toLocaleString();
+      document.getElementById('calMax').textContent = `/ ${targetKcal.toLocaleString()}`;
+      document.getElementById('calGoalRange').textContent = `${(2400 + extraKcal).toLocaleString()}–${(2550 + extraKcal).toLocaleString()} kcal`;
+      document.getElementById('calLeft').textContent = kcal >= targetKcal ? 'Target Hit! 🔥' : `${(targetKcal - kcal).toLocaleString()} left`;
+      document.getElementById('calBar').style.width = `${Math.min(100, (kcal / targetKcal) * 100)}%`;
+
+      document.getElementById('proVal').textContent = `${pro}g`;
+      document.getElementById('proMax').textContent = `/ ${targetPro}g`;
+      document.getElementById('proGoalRange').textContent = `${110 + extraPro}–${130 + extraPro} g`;
+      document.getElementById('proLeft').textContent = pro >= targetPro ? 'Protein Hit! 💪' : `${targetPro - pro}g left`;
+      document.getElementById('proBar').style.width = `${Math.min(100, (pro / targetPro) * 100)}%`;
+
+      // Habits
+      document.getElementById('chip-creatine').classList.toggle('done', !!day.habits.creatine);
+      document.getElementById('lbl-creatine').textContent = day.habits.creatine ? '✓ 3g Taken' : 'Post-Workout';
+
+      document.getElementById('chip-workout').classList.toggle('done', !!day.habits.workout);
+      document.getElementById('lbl-workout').textContent = day.habits.workout ? '✓ Completed' : 'Tap to complete';
+
+      const glasses = day.habits.glasses || 0;
+      document.getElementById('chip-water').classList.toggle('done', glasses >= 7);
+      document.getElementById('waterGlasses').textContent = glasses;
+      document.getElementById('waterLiters').textContent = (glasses * 0.5).toFixed(1);
+
+      // Render 5 Meal Slots
+      const container = document.getElementById('mealSlotsContainer');
+      container.innerHTML = MEAL_SLOTS.map(slot => {
+        const opt = getActiveOptionForSlot(day, slot);
+        const isChk = !!day.checked[slot.id];
+        return `
+          <div class="meal-card ${isChk ? 'checked' : ''}">
+            <div class="meal-top">
+              <div class="meal-check-wrap" onclick="toggleSlotCheck('${slot.id}')">
+                <div class="checkbox-box">${isChk ? '✓' : ''}</div>
+                <div style="flex:1;">
+                  <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                    <span class="slot-pill">${slot.label}</span>
+                    <span class="time-pill">${slot.time}</span>
+                    ${opt.tag ? `<span class="time-pill" style="color:#fbbf24;">${opt.tag}</span>` : ''}
+                  </div>
+                  <div class="meal-name">${opt.name}</div>
+                  <div class="meal-macros">
+                    <strong class="text-emerald">${opt.kcal} kcal</strong>
+                    <strong class="text-sky">${opt.pro}g protein</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="meal-footer">
+              <span style="font-size:11px; color:var(--muted);">${slot.options.length} curated options for ${slot.label.replace(/^\d+\.\s*/, '')}</span>
+              <button class="btn btn-slate btn-sm" onclick="openSlotOptionsModal('${slot.id}')">
+                Choose Option / Swap ▾
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Extra Quick Foods
+      const extraCard = document.getElementById('customLogsCard');
+      const extraList = document.getElementById('customLogsList');
+      if (day.extraFoods && day.extraFoods.length > 0) {
+        extraCard.classList.remove('hidden');
+        extraList.innerHTML = day.extraFoods.map(item => `
+          <div class="shop-item">
+            <div>
+              <div style="font-size:13px; font-weight:700;">${item.name}</div>
+              <div style="font-size:11px; color:var(--muted);"><span class="text-emerald">+${item.kcal} kcal</span> • <span class="text-sky">+${item.pro}g protein</span></div>
+            </div>
+            <button class="btn btn-ghost btn-sm" onclick="removeCustomFood('${item.id}')">✕</button>
+          </div>
+        `).join('');
+      } else {
+        extraCard.classList.add('hidden');
+      }
+    }
+
+    function toggleSlotCheck(slotId) {
+      const day = ensureDay(state.date);
+      day.checked[slotId] = !day.checked[slotId];
+      saveState();
+      renderTracker();
+    }
+
+    function checkAllSlots() {
+      const day = ensureDay(state.date);
+      MEAL_SLOTS.forEach(s => day.checked[s.id] = true);
+      saveState();
+      renderTracker();
+      toast('All 5 meal slots checked!');
+    }
+
+    function toggleHabit(key) {
+      const day = ensureDay(state.date);
+      day.habits[key] = !day.habits[key];
+      saveState();
+      renderTracker();
+    }
+
+    function bumpWater() {
+      const day = ensureDay(state.date);
+      day.habits.glasses = ((day.habits.glasses || 0) + 1) % 9; // 0..8 glasses (up to 4.0L)
+      saveState();
+      renderTracker();
+    }
+
+    // Slot-Specific Options Picker Modal
+    function openSlotOptionsModal(slotId) {
+      const slot = MEAL_SLOTS.find(s => s.id === slotId);
+      const day = ensureDay(state.date);
+      const currentOpt = getActiveOptionForSlot(day, slot);
+
+      document.getElementById('slotModalTag').textContent = `${slot.time} • ${day.mode} DAY`;
+      document.getElementById('slotModalTitle').textContent = `Options for ${slot.label}`;
+
+      const listEl = document.getElementById('slotOptionsList');
+      listEl.innerHTML = slot.options.map((opt, idx) => {
+        const isSelected = currentOpt.name === opt.name;
+        return `
+          <div class="option-item ${isSelected ? 'selected' : ''}" onclick="pickSlotOption('${slotId}', ${idx})">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+              <span style="font-size:11px; font-weight:800; color:${isSelected ? '#34d399' : '#fbbf24'};">${opt.tag}</span>
+              ${isSelected ? '<span style="font-size:11px; font-weight:800; color:#34d399;">✓ Active</span>' : ''}
+            </div>
+            <div style="font-size:13px; font-weight:600; color:var(--text);">${opt.name}</div>
+            <div style="font-size:12px; margin-top:5px;">
+              <strong class="text-emerald">${opt.kcal} kcal</strong> • <strong class="text-sky">${opt.pro}g protein</strong>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      openModal('slotModal');
+    }
+
+    function pickSlotOption(slotId, idx) {
+      const day = ensureDay(state.date);
+      delete day.customSlotOverride[slotId];
+      day.selectedOptionIdx[slotId] = idx;
+      day.checked[slotId] = true;
+      saveState();
+      closeModal('slotModal');
+      renderTracker();
+      toast('Meal option selected & logged!');
+    }
+
+    function openCustomFoodModal() { openModal('customFoodModal'); }
+
+    function saveCustomFood(e) {
+      e.preventDefault();
+      const name = document.getElementById('cfName').value.trim();
+      const kcal = parseInt(document.getElementById('cfKcal').value, 10) || 0;
+      const pro = parseInt(document.getElementById('cfPro').value, 10) || 0;
+      if (!name) return;
+
+      const day = ensureDay(state.date);
+      day.extraFoods.push({ id: 'cf_' + Date.now(), name, kcal, pro });
+      saveState();
+      e.target.reset();
+      closeModal('customFoodModal');
+      renderTracker();
+      toast(`Added "${name}" (+${kcal} kcal)`);
+    }
+
+    function removeCustomFood(id) {
+      const day = ensureDay(state.date);
+      day.extraFoods = day.extraFoods.filter(f => f.id !== id);
+      saveState();
+      renderTracker();
+    }
+
+    // =========================================================================
+    // 8. 36-RECIPE LIBRARY, BATCH PREP TRACKER & TIMER
+    // =========================================================================
+    let activeSlotFilter = 'All';
+    let activeTagFilter = 'All';
+    let timerSec = 180;
+    let timerHandle = null;
+
+    function setSlotFilter(slot, btn) {
+      activeSlotFilter = slot;
+      document.querySelectorAll('#slotFilterPills .filter-pill').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      renderRecipes();
+    }
+
+    function setTagFilter(tag, btn) {
+      activeTagFilter = tag;
+      document.querySelectorAll('#tagFilterPills .filter-pill').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      renderRecipes();
+    }
+
+    function renderRecipes() {
+      const q = (document.getElementById('recipeSearch').value || '').toLowerCase().trim();
+      const all = [...RECIPES, ...(state.customRecipes || [])];
+      const filtered = all.filter(r => {
+        const okSlot = activeSlotFilter === 'All' || r.slot === activeSlotFilter;
+        const okTag = activeTagFilter === 'All' || (r.tags && r.tags.includes(activeTagFilter));
+        const okQ = !q || r.title.toLowerCase().includes(q) || r.ing.some(i => i.toLowerCase().includes(q));
+        return okSlot && okTag && okQ;
+      });
+
+      const grid = document.getElementById('recipesGrid');
+      if (filtered.length === 0) {
+        grid.innerHTML = `<div class="card" style="grid-column:1/-1; text-align:center; color:var(--muted);">No recipes match that filter. Try clearing search or filter pills.</div>`;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(r => `
+        <div class="recipe-card">
+          <div>
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; margin-bottom:6px;">
+              <span class="slot-pill">${r.slot}</span>
+              <span class="time-pill">⏱️ ${r.time}m</span>
+            </div>
+            <div onclick="openRecipeModal('${r.id}')" style="font-size:15px; font-weight:800; cursor:pointer; margin-bottom:4px;">${r.title}</div>
+            <div style="font-size:11px; color:var(--muted);">${r.ing.slice(0, 3).join(', ')}...</div>
+          </div>
+          <div>
+            <div style="display:flex; justify-content:space-between; font-size:12px; background:var(--bg); padding:8px 10px; border-radius:10px; border:1px solid var(--border); margin-bottom:8px;">
+              <strong class="text-emerald">${r.kcal} kcal</strong>
+              <strong class="text-sky">${r.pro}g protein</strong>
+              <span style="color:var(--muted);">${r.carb || 0}C/${r.fat || 0}F</span>
+            </div>
+            <div style="display:flex; gap:6px;">
+              <button class="btn btn-slate btn-sm" style="flex:1;" onclick="openRecipeModal('${r.id}')">Method &amp; Timer</button>
+              <button class="btn btn-emerald btn-sm" onclick="logRecipeToSlot('${r.id}')">+ Log</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function openRecipeModal(id) {
+      const all = [...RECIPES, ...(state.customRecipes || [])];
+      const r = all.find(x => x.id === id);
+      if (!r) return;
+
+      document.getElementById('rmBadges').innerHTML = `
+        <span class="slot-pill">${r.slot}</span>
+        <span class="time-pill">⏱️ ${r.time} mins</span>
+        ${(r.tags || []).map(t => `<span class="time-pill">${t}</span>`).join('')}
+      `;
+      document.getElementById('rmTitle').textContent = r.title;
+      document.getElementById('rmKcal').textContent = r.kcal;
+      document.getElementById('rmPro').textContent = r.pro + 'g';
+      document.getElementById('rmCarb').textContent = (r.carb || 0) + 'g';
+      document.getElementById('rmFat').textContent = (r.fat || 0) + 'g';
+
+      document.getElementById('rmIng').innerHTML = r.ing.map(i => `<li>${i}</li>`).join('');
+      document.getElementById('rmSteps').innerHTML = r.steps.map(s => `<li>${s}</li>`).join('');
+
+      const logBtn = document.getElementById('rmLogSlotBtn');
+      logBtn.textContent = `+ Log to ${r.slot}`;
+      logBtn.onclick = () => { logRecipeToSlot(r.id); closeModal('recipeModal'); };
+
+      setTimer(Math.min(600, r.time * 60));
+      openModal('recipeModal');
+    }
+
+    function logRecipeToSlot(id) {
+      const all = [...RECIPES, ...(state.customRecipes || [])];
+      const r = all.find(x => x.id === id);
+      if (!r) return;
+
+      const slotMap = {
+        'Pre-Workout': 'pre',
+        'Post-Workout': 'post',
+        'Lunch': 'lunch',
+        'Evening Snack': 'snack',
+        'Dinner': 'dinner'
+      };
+      const slotId = slotMap[r.slot];
+      const day = ensureDay(state.date);
+
+      if (slotId) {
+        day.customSlotOverride[slotId] = { tag: 'Recipe Logged', name: r.title, kcal: r.kcal, pro: r.pro };
+        day.checked[slotId] = true;
+        toast(`Logged "${r.title}" into ${r.slot}!`);
+      } else {
+        day.extraFoods.push({ id: 'rec_' + Date.now(), name: r.title, kcal: r.kcal, pro: r.pro });
+        toast(`Logged "${r.title}" (+${r.kcal} kcal)`);
+      }
+      saveState();
+      renderTracker();
+    }
+
+    function openAddRecipeModal() { openModal('addRecipeModal'); }
+
+    function saveNewRecipe(e) {
+      e.preventDefault();
+      const rec = {
+        id: 'cr_' + Date.now(),
+        title: document.getElementById('nrTitle').value.trim(),
+        slot: document.getElementById('nrSlot').value,
+        tags: ['10-Min', document.getElementById('nrTag').value],
+        time: parseInt(document.getElementById('nrTime').value, 10) || 10,
+        kcal: parseInt(document.getElementById('nrKcal').value, 10) || 400,
+        pro: parseInt(document.getElementById('nrPro').value, 10) || 30,
+        carb: parseInt(document.getElementById('nrCarb').value, 10) || 40,
+        fat: 12,
+        ing: document.getElementById('nrIng').value.split(',').map(s => s.trim()).filter(Boolean),
+        steps: document.getElementById('nrSteps').value.split('.').map(s => s.trim()).filter(Boolean)
+      };
+      state.customRecipes.unshift(rec);
+      saveState();
+      e.target.reset();
+      closeModal('addRecipeModal');
+      renderRecipes();
+      toast(`Saved "${rec.title}"!`);
+    }
+
+    // Batch Prep Tracker
+    function startNewBatch() {
+      state.batchPrep = { timestamp: Date.now(), portionsLeft: 5 };
+      saveState();
+      renderBatchStatus();
+      toast('750g Chicken Marinade prepped! 5 portions ready.');
+    }
+
+    function useBatchPortion() {
+      if (!state.batchPrep.timestamp || state.batchPrep.portionsLeft <= 0) {
+        toast('No portions left — tap Marinate 750g Now!');
+        return;
+      }
+      state.batchPrep.portionsLeft = Math.max(0, state.batchPrep.portionsLeft - 1);
+      saveState();
+      renderBatchStatus();
+      toast(`Used 150g portion (${state.batchPrep.portionsLeft}/5 left)`);
+    }
+
+    function renderBatchStatus() {
+      const el = document.getElementById('batchStatusLine');
+      if (!state.batchPrep || !state.batchPrep.timestamp) {
+        el.textContent = 'Not prepped yet — tap "Marinate 750g Now" when ready.';
+        el.style.color = '#fbbf24';
+        return;
+      }
+      const hrs = (Date.now() - state.batchPrep.timestamp) / 3600000;
+      const daysLeft = Math.max(0, 4 - hrs / 24);
+      el.textContent = `✓ ${state.batchPrep.portionsLeft}/5 portions left • ~${daysLeft.toFixed(1)} days fresh in fridge`;
+      el.style.color = (daysLeft < 0.7 || state.batchPrep.portionsLeft === 0) ? '#fb7185' : '#34d399';
+    }
+
+    // Kitchen Timer
+    function fmtTime(s) {
+      return `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
+    }
+
+    function setTimer(sec) {
+      clearInterval(timerHandle);
+      timerHandle = null;
+      timerSec = sec;
+      document.getElementById('timerDisplay').textContent = fmtTime(timerSec);
+      document.getElementById('timerToggleBtn').textContent = 'Start';
+    }
+
+    function toggleTimer() {
+      const btn = document.getElementById('timerToggleBtn');
+      if (timerHandle) {
+        clearInterval(timerHandle);
+        timerHandle = null;
+        btn.textContent = 'Resume';
+      } else {
+        btn.textContent = 'Pause';
+        timerHandle = setInterval(() => {
+          if (timerSec > 0) {
+            timerSec--;
+            document.getElementById('timerDisplay').textContent = fmtTime(timerSec);
+          } else {
+            clearInterval(timerHandle);
+            timerHandle = null;
+            btn.textContent = 'Done!';
+            toast('⏰ Kitchen Timer Complete!');
+          }
+        }, 1000);
+      }
+    }
+
+    // =========================================================================
+    // 9. SHOPPING & ₹15,000 MONTHLY BUDGET TRACKER
+    // =========================================================================
+    function renderShopping() {
+      const supp = state.shopping.supplements;
+      const groc = state.shopping.groceries;
+
+      const sSum = supp.reduce((a, b) => a + Number(b.price || 0), 0);
+      const gWk = groc.reduce((a, b) => a + Number(b.price || 0), 0);
+      const gMo = gWk * 4;
+      const total = sSum + gMo;
+
+      document.getElementById('budgetTotalEst').textContent = `₹${total.toLocaleString('en-IN')}`;
+      document.getElementById('suppSum').textContent = `₹${sSum.toLocaleString('en-IN')}`;
+      document.getElementById('grocSum').innerHTML = `₹${gMo.toLocaleString('en-IN')} <span style="font-size:11px; color:var(--muted);">(₹${gWk}/wk)</span>`;
+      document.getElementById('budgetBar').style.width = `${Math.min(100, (total / 15000) * 100)}%`;
+
+      document.getElementById('suppList').innerHTML = renderShopRows('supplements', supp);
+      document.getElementById('grocList').innerHTML = renderShopRows('groceries', groc);
+    }
+
+    function renderShopRows(sec, items) {
+      return items.map(it => `
+        <div class="shop-item ${it.checked ? 'checked' : ''}">
+          <div style="display:flex; align-items:center; gap:10px; cursor:pointer; flex:1;" onclick="toggleShopItem('${sec}','${it.id}')">
+            <div class="checkbox-box" style="width:20px; height:20px; ${it.checked ? 'background:var(--emerald); border-color:var(--emerald); color:#052e16;' : ''}">
+              ${it.checked ? '✓' : ''}
+            </div>
+            <span class="item-name" style="font-size:12px; font-weight:600;">${it.name}</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:4px;">
+            <span style="font-size:11px; color:var(--muted);">₹</span>
+            <input class="price-input" type="number" value="${it.price}" onchange="editShopPrice('${sec}','${it.id}',this.value)" />
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function toggleShopItem(sec, id) {
+      const it = state.shopping[sec].find(x => x.id === id);
+      if (it) { it.checked = !it.checked; saveState(); renderShopping(); }
+    }
+
+    function editShopPrice(sec, id, val) {
+      const it = state.shopping[sec].find(x => x.id === id);
+      if (it) { it.price = Math.max(0, parseInt(val, 10) || 0); saveState(); renderShopping(); }
+    }
+
+    function resetShopSection(sec) {
+      state.shopping[sec].forEach(i => i.checked = false);
+      saveState();
+      renderShopping();
+      toast('Checklist reset!');
+    }
+
+    // =========================================================================
+    // 10. FRIDAY WEIGH-IN & STALL-BUSTER PROGRESS
+    // =========================================================================
+    function renderProgress() {
+      document.getElementById('wDate').value = todayISO();
+      const logs = [...state.weights].sort((a, b) => a.date.localeCompare(b.date));
+      const start = logs[0]?.weight || 47.0;
+      const latest = logs[logs.length - 1]?.weight || 47.0;
+      const gain = latest - start;
+
+      document.getElementById('hdrWeight').textContent = latest.toFixed(1);
+      document.getElementById('latestWeightStat').textContent = `${latest.toFixed(2)} kg`;
+      document.getElementById('totalGainStat').textContent = `${gain >= 0 ? '+' : ''}${gain.toFixed(2)} kg`;
+
+      const btn = document.getElementById('manualStallBtn');
+      if (state.surplusActive) {
+        btn.textContent = '⚡ Active (+200 kcal)';
+        btn.className = 'btn btn-amber btn-sm';
+      } else {
+        btn.textContent = 'Off (Standard)';
+        btn.className = 'btn btn-slate btn-sm';
+      }
+
+      // Check 2-week stall rule (< 0.25 kg gain over last two intervals)
+      let stalled = false;
+      if (logs.length >= 3) {
+        const d1 = logs[logs.length - 1].weight - logs[logs.length - 2].weight;
+        const d2 = logs[logs.length - 2].weight - logs[logs.length - 3].weight;
+        if (d1 < 0.25 && d2 < 0.25) stalled = true;
+      }
+      document.getElementById('stallBanner').classList.toggle('hidden', !stalled || state.surplusActive);
+
+      // History list
+      document.getElementById('weightHistoryList').innerHTML = logs.map((w, i) => {
+        const diff = i > 0 ? w.weight - logs[i - 1].weight : 0;
+        const badge = i === 0
+          ? '<span style="color:var(--muted);">Baseline</span>'
+          : `<strong class="${diff >= 0.25 ? 'text-emerald' : 'text-amber'}">${diff >= 0 ? '+' : ''}${diff.toFixed(2)} kg</strong>`;
+        return `
+          <div class="shop-item" style="margin-bottom:0;">
+            <div>
+              <strong style="font-size:13px;">${w.weight.toFixed(2)} kg</strong>
+              <span style="font-size:11px; color:var(--muted); margin-left:6px;">${w.date}</span>
+              <div style="font-size:11px; color:var(--muted);">${w.note || 'Friday Empty-Stomach Weigh-In'}</div>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px; font-size:12px;">
+              ${badge}
+              ${i > 0 ? `<button class="btn btn-ghost btn-sm" onclick="delWeight('${w.id}')">✕</button>` : ''}
+            </div>
+          </div>
+        `;
+      }).reverse().join('');
+
+      drawWeightChart(logs);
+    }
+
+    function drawWeightChart(logs) {
+      const box = document.getElementById('weightSvgBox');
+      if (!logs.length) return;
+      const ws = logs.map(l => l.weight);
+      const minW = Math.floor((Math.min(...ws) - 0.5) * 2) / 2;
+      const maxW = Math.ceil((Math.max(...ws) + 0.8) * 2) / 2;
+      const span = Math.max(1, maxW - minW);
+
+      const W = 560, H = 160, px = 38, py = 22;
+      const pts = logs.map((l, i) => {
+        const x = logs.length === 1 ? W / 2 : px + (i / (logs.length - 1)) * (W - px * 2);
+        const y = H - py - ((l.weight - minW) / span) * (H - py * 2);
+        return { x, y, w: l.weight, d: l.date.slice(5) };
+      });
+
+      const poly = pts.map(p => `${p.x},${p.y}`).join(' ');
+      box.innerHTML = `
+        <svg viewBox="0 0 ${W} ${H}" width="100%" height="100%">
+          <line x1="${px}" y1="${py}" x2="${W - px}" y2="${py}" stroke="#1e293b" stroke-dasharray="4"/>
+          <line x1="${px}" y1="${H - py}" x2="${W - px}" y2="${H - py}" stroke="#1e293b"/>
+          <text x="4" y="${py + 4}" fill="#64748b" font-size="11">${maxW.toFixed(1)}kg</text>
+          <text x="4" y="${H - py + 4}" fill="#64748b" font-size="11">${minW.toFixed(1)}kg</text>
+          ${pts.length > 1 ? `<polyline fill="none" stroke="#10b981" stroke-width="3" stroke-linecap="round" points="${poly}"/>` : ''}
+          ${pts.map(p => `
+            <circle cx="${p.x}" cy="${p.y}" r="5" fill="#10b981" stroke="#090d16" stroke-width="2"/>
+            <text x="${p.x}" y="${p.y - 9}" text-anchor="middle" fill="#f8fafc" font-size="11" font-weight="bold">${p.w.toFixed(1)}</text>
+            <text x="${p.x}" y="${H - 4}" text-anchor="middle" fill="#64748b" font-size="10">${p.d}</text>
+          `).join('')}
+        </svg>
+      `;
+    }
+
+    function logFridayWeight(e) {
+      e.preventDefault();
+      const date = document.getElementById('wDate').value;
+      const weight = parseFloat(document.getElementById('wVal').value);
+      const note = document.getElementById('wNote').value.trim();
+      if (!date || isNaN(weight)) return;
+      state.weights.push({ id: 'w_' + Date.now(), date, weight, note });
+      saveState();
+      document.getElementById('wVal').value = '';
+      document.getElementById('wNote').value = '';
+      renderProgress();
+      toast(`Logged ${weight.toFixed(2)} kg!`);
+    }
+
+    function delWeight(id) {
+      state.weights = state.weights.filter(w => w.id !== id);
+      saveState();
+      renderProgress();
+    }
+
+    function activateStallBuster() {
+      state.surplusActive = true;
+      saveState();
+      renderProgress();
+      renderTracker();
+      toast('⚡ +200 kcal Stall-Buster added to daily goal!');
+    }
+
+    function toggleStallManual() {
+      state.surplusActive = !state.surplusActive;
+      saveState();
+      renderProgress();
+      renderTracker();
+    }
+
+    // =========================================================================
+    // 11. MODALS, SELF-SAVE .HTML & JSON BACKUP
+    // =========================================================================
+    function openModal(id) { document.getElementById(id).classList.add('open'); }
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('open');
+      if (id === 'recipeModal' && timerHandle) { clearInterval(timerHandle); timerHandle = null; }
+    }
+    function openBackupModal() { openModal('backupModal'); }
+
+    function downloadSelfHTML() {
+      const htmlContent = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+      const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'bulkos_tracker.html';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      toast('Downloaded bulkos_tracker.html! Open in Safari & Add to Home Screen.');
+    }
+
+    function exportJSON() {
+      const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `bulkos-backup-${todayISO()}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      toast('JSON Backup Downloaded!');
+    }
+
+    function importJSON(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = ev => {
+        try {
+          const parsed = JSON.parse(ev.target.result);
+          if (parsed && parsed.days) {
+            state = parsed;
+            saveState();
+            closeModal('backupModal');
+            renderTracker();
+            renderProgress();
+            toast('Backup restored!');
+          }
+        } catch (err) { toast('Invalid JSON file.'); }
+      };
+      reader.readAsText(file);
+    }
+
+    // =========================================================================
+    // 12. BOOTSTRAP ON WINDOW LOAD
+    // =========================================================================
+    window.onload = function () {
+      generateAppleTouchIcon();
+      loadState();
+      renderTracker();
+      renderProgress();
+    };
+  </script>
+</body>
+</html>
